@@ -3,6 +3,8 @@ name: fastapi-github-actions-test
 on:
   pull_request:
     branches: [main]
+env:
+  - IMAGE_NAME=jukov-itog-test-server
 
 jobs:
   test:
@@ -37,19 +39,19 @@ jobs:
       - name: Run tests
         run: pytest .
 
-      # Building and publishing docker image
   publish-docker-image:
     runs-on: ubuntu-latest
     needs: test
+    # Building and publishing docker image
     steps:
       - name: Docker login
         run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
 
       - name: Docker build
-        run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USER}}/jukov-task8:latest
+        run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USER}}/${IMAGE_NAME}
 
       - name: Docker push
-        run: docker push ${{secrets.DOCKER_USER}}/jukov-task8:latest
+        run: docker push ${{secrets.DOCKER_USER}}/${IMAGE_NAME}
 
       - name: Change permissions
         run: chmod 777 docker-compose.yml
