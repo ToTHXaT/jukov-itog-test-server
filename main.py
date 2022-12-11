@@ -6,4 +6,4 @@ app = FastAPI()
 
 @app.get("/about")
 def hello():
-    return HTMLResponse("<h3>Hello, ainur</h3>")
+    return HTMLResponse("<h3>Hello, ainur new-about-response</h3>")
