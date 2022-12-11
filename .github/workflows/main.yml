@@ -74,5 +74,5 @@ jobs:
           user: ${{secrets.USERNAME}}                                      # Remote server user - REQUIRED true
           password: ${{secrets.PASSWORD}}                              # User password - REQUIRED at least one of "password" or "key"
           post_upload: |
-            cd ~/Sites/jukov-task8 && 
+            cd ~/Sites/jukov-itog-test-server && 
             docker-compose up -d
