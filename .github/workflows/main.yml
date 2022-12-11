@@ -59,6 +59,7 @@ jobs:
   upload-to-server:
     runs-on: ubuntu-latest
     needs: publish-docker-image
+    steps:
       # Uploading docker-compose file to the target server and launching built containers over ssh
       - uses: mdallasanta/ssh-scp-deploy@v1.2.0
         with:
