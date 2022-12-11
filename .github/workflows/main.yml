@@ -1,8 +1,8 @@
 name: fastapi-github-actions-test
 
 on:
-  push:
-    branches: [task8-ci-cd]
+  pull_request:
+    branches: [main]
 
 jobs:
   test:
