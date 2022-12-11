@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  python-app:
+    image: qeyn/test-manager-itog
+    ports:
+      - "0.0.0.0:80:80"
+    environment:
+      - PYTHONBUFFERED=1
+      - MAX_WORKERS=2
+  postgres:
+    image: postgres:alpine

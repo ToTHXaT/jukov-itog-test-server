@@ -1,0 +1,71 @@
+name: fastapi-github-actions-test
+
+on:
+  push:
+    branches: [task8-ci-cd]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Installing python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Cache poetry install
+        uses: actions/cache@v2
+        with:
+          path: ~/.local
+          key: poetry
+
+      # Installing poetry for dependency management
+      - name: Install poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
+          virtualenvs-in-project: false
+
+      # Installing dependencies
+      - name: Install dependencies
+        run: poetry install
+
+      # Running tests
+      - name: Run tests
+        run: pytest .
+
+      # Building and publishing docker image
+  publish-docker-image:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Docker login
+        run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Docker build
+        run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USER}}/jukov-task8:latest
+
+      - name: Docker push
+        run: docker push ${{secrets.DOCKER_USER}}/jukov-task8:latest
+
+      - name: Change permissions
+        run: chmod 777 docker-compose.yml
+
+  upload-to-server:
+    runs-on: ubuntu-latest
+    needs: publish-docker-image
+      # Uploading docker-compose file to the target server and launching built containers over ssh
+      - uses: mdallasanta/ssh-scp-deploy@v1.2.0
+        with:
+          local: './docker-compose.yml'
+          remote: '~/Sites/jukov-itog'                                                 # Remote file path - REQUIRED false - DEFAULT ~/
+          host: ${{secrets.HOST}}                                      # Remote server address - REQUIRED true
+          port: ${{secrets.PORT}}                                      # Remote server port - REQUIRED false - DEFAULT 22
+          user: ${{secrets.USERNAME}}                                      # Remote server user - REQUIRED true
+          password: ${{secrets.PASSWORD}}                              # User password - REQUIRED at least one of "password" or "key"
+          post_upload: |
+            cd ~/Sites/jukov-task8 && 
+            docker-compose up -d
