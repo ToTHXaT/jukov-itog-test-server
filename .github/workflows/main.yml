@@ -44,6 +44,8 @@ jobs:
     needs: test
     # Building and publishing docker image
     steps:
+      - uses: actions/checkout@v3
+
       - name: Docker login
         run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
 
@@ -61,6 +63,8 @@ jobs:
     needs: publish-docker-image
     steps:
       # Uploading docker-compose file to the target server and launching built containers over ssh
+      - uses: actions/checkout@v3
+
       - uses: mdallasanta/ssh-scp-deploy@v1.2.0
         with:
           local: './docker-compose.yml'
