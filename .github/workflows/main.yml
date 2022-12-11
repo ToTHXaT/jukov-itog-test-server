@@ -68,7 +68,7 @@ jobs:
       - uses: mdallasanta/ssh-scp-deploy@v1.2.0
         with:
           local: './docker-compose.yml'
-          remote: '~/Sites/jukov-itog-test-server/'                                                 # Remote file path - REQUIRED false - DEFAULT ~/
+          remote: '~/Sites/jukov-itog-test-server/docker-compose.yml'                                                 # Remote file path - REQUIRED false - DEFAULT ~/
           host: ${{secrets.HOST}}                                      # Remote server address - REQUIRED true
           port: ${{secrets.PORT}}                                      # Remote server port - REQUIRED false - DEFAULT 22
           user: ${{secrets.USERNAME}}                                      # Remote server user - REQUIRED true
