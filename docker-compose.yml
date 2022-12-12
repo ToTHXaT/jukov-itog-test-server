@@ -10,3 +10,5 @@ services:
       - MAX_WORKERS=2
   postgres:
     image: postgres:alpine
+    environment:
+      - POSTGRES_PASSWORD=1235
